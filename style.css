@@ -1,0 +1,77 @@
+/* Removes default element styling from web browser */
+* {
+   margin: 0;
+   padding: 0;
+   font-family: 'Poppins', sans-serif;
+   box-sizing: border-box; 
+}
+body{
+    background: #fff;
+}
+.app{
+    background: #fff;
+    width: 90%;
+    max-width: 600px;
+    margin: 100px auto 0;
+    border-radius: 10px;
+    padding: 30px;
+}
+.quiz{
+
+}
+
+#submitButton {
+    background-color: #13c359;  /* Button background color */
+    color: white;               /* Text color */
+    padding: 10px 20px;         /* Padding around the text */
+    font-size: 16px;            /* Text size */
+    border: none;               /* Removes the border */
+    border-radius: 5px;         /* Rounds the corners */
+    cursor: pointer;            /* Changes the cursor to a pointer when hovered */
+}
+
+#submitButton:hover {
+    background-color: #118b44;  /* Darkens the background color on hover */
+}
+
+/* Style for the current problem displayed */
+#problem {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Style for user answer input box */
+#userAnswer {
+    width: 100%;
+    padding: 10px;         /* Add padding inside the input */
+    font-size: 18px;       /* Increase font size */
+    height: 40px;          /* Increase height */
+    border: 1px solid #ddd; /* Light border around the input */
+    border-radius: 5px;    /* Slightly round the corners */
+    margin-bottom: 20px;
+}
+
+.progress-container {
+    width: 90%;
+    max-width: 600px;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#progress-bar {
+    height: 20px;
+    width: 100%; /* Initially full width, will be updated with JavaScript */
+    background-color: #13c359;
+    transition: width 0.3s ease; /* Smooth transition for width change */
+}
+
+#timer {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
