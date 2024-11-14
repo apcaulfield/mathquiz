@@ -10,8 +10,8 @@ const operations = {
  * Used for formatting the equation that is displayed to the user.
  * Called by generateEquation() after difficulty specific properties are applied.
  * Returns equation as string and numerical solution to it.
- * @param {number[]} numbers - array containing all numbers included in current expression.
- * @param {string[]} operators - array containing all allowed operators for the current difficulty level.
+ * @param {number[]} numbers: array containing all numbers included in current expression.
+ * @param {string[]} operators: array containing all allowed operators for the current difficulty level.
  */
 function formatEquation(numbers, operators){
   let equation = '';
@@ -34,8 +34,8 @@ function formatEquation(numbers, operators){
 
 /**
 * Generates a random math equation for the user to solve.
-* grade: 0 = Kindergarden, 1 = 1st Grade, 2 = 2nd Grade, etc. up to 12.
-* progressScore: How close the user is to advancing to the next grade level. Used to adjust difficulty within a grade level.
+* @param {int} grade: 0 = Kindergarden, 1 = 1st Grade, 2 = 2nd Grade, etc. up to 12.
+* @param {float} progressScore: How close the user is to advancing to the next grade level. Used to adjust difficulty within a grade level.
 */
 function generateEquation(grade, progressScore) {
   let operators = ['+', '-'];
@@ -92,10 +92,17 @@ function generateEquation(grade, progressScore) {
   return equation;
 }
 
+let grade = 0;
+let score = 0;
+let progressScore = 0;
+
 // Initial and max time in seconds
 let timer = 30;
 const maxTime = 90;
 let intervalId;
+
+// Timer for how long it takes the user to answer the current problem
+let currentProblemTimer = 0;
 
 // Initial problem solution
 let initialEquation = generateEquation(0, 0);
@@ -103,7 +110,7 @@ let solution = initialEquation.solution;
 document.getElementById("problem").innerText = `${initialEquation.equation}\n`;
 
 // Display initial progress bar
-updateProgressBar();
+updateTimerBar();
 // Start the countdown timer
 startTimer();
 
@@ -120,13 +127,14 @@ document.getElementById("userAnswer").addEventListener("keydown", function (even
 function startTimer() {
     intervalId = setInterval(() => {
         timer -= 1;
+        currentProblemTimer += 1;
         document.getElementById("time-remaining").textContent = timer;
-        updateProgressBar();
+        updateTimerBar();
 
         if (timer <= 0) {
             clearInterval(intervalId);
             alert("Time's up! Game over.");
-            // Optionally, you could reset or end the game here
+            // TODO: reset or end game here
         }
     }, 1000); // Update every second
 }
@@ -134,14 +142,19 @@ function startTimer() {
 /**
  * Updates the width of the progress bar based on the remaining time.
  */
-function updateProgressBar() {
-    const progressBar = document.getElementById("progress-bar");
-    progressBar.style.width = `${(timer / maxTime) * 100}%`;
+function updateTimerBar() {
+    const timerBar = document.getElementById("timer-bar");
+    timerBar.style.width = `${(timer / maxTime) * 100}%`;
     if (timer <= 10) {
-        progressBar.style.backgroundColor = "#e74c3c"; // Change to red when time is low
+        timerBar.style.backgroundColor = "#e74c3c"; // Change to red when time is low
     } else {
-        progressBar.style.backgroundColor = "#13c359"; // Reset to green otherwise
+        timerBar.style.backgroundColor = "#13c359"; // Reset to green otherwise
     }
+}
+
+function updateProgressBar(){
+  const progressBar = document.getElementById("progress-score-bar");
+  progressBar.style.width = `${(progressScore * 100)}%`;
 }
 
 /**
@@ -151,27 +164,40 @@ function checkAnswer() {
     const userAnswer = parseFloat(document.getElementById("userAnswer").value);
     const feedback = document.getElementById("feedback");
 
+    // Correct answer
     if (userAnswer === solution) {
         feedback.style.color = "green";
-        console.log(`userAnswer: ${userAnswer}, Solution: ${solution}`);
-
         feedback.innerText = "Correct!";
+
+        //Updating progress
+        console.log(currentProblemTimer);
+        progressScore = Math.min(progressScore + (1 / (3 * currentProblemTimer)), 1);
+
+        //Updating score
 
         // Increase time by 5 seconds for correct answer
         timer = Math.min(timer + 5, 90); // Ensure timer doesn't exceed 30 seconds
+        currentProblemTimer = 0;
 
         // Generate a new equation
-        const newEquation = generateEquation(0, 0);
+        const newEquation = generateEquation(grade, progressScore);
         solution = newEquation.solution;
         document.getElementById("problem").innerText = `${newEquation.equation}\n`;
-        document.getElementById("userAnswer").value = ""; // Clear input box
     } else {
         feedback.style.color = "red";
         feedback.innerText = "Incorrect!";
 
+        // Decrease progress towards next grade by 25%
+        progressScore = Math.max(progressScore - 0.25, 0);
+
         // Decrease time by 3 seconds for incorrect answer
-        timer = Math.max(timer - 3, 0); // Ensure timer doesn't go below 0
+        timer = Math.max(timer - 3, 0);
     }
 
+    // Clear input box
+    document.getElementById("userAnswer").value = "";
+    document.getElementById("time-remaining").textContent = timer;
+    updateTimerBar();
     updateProgressBar();
+    console.log(progressScore);
 }
