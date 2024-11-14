@@ -77,13 +77,15 @@ function generateEquation(grade, progressScore) {
       }
       const num1 = Math.floor(Math.random() * maxNum) + 1;
       const num2 = Math.floor(Math.random() * maxNum) + 1;
-      if (progressScore > 0.5){
+      if (progressScore >=  0.75 && Math.random() < (1/3)){
+        // 1 in 3 chance that the expression contains 3 operands
         const num3 = Math.floor(Math.random() * maxNum) + 1;
         equation = formatEquation([num1, num2, num3], operators);
       }
       else{
         equation = formatEquation([num1, num2], operators);
       }
+
   }
 
   // Display current problem
@@ -92,7 +94,8 @@ function generateEquation(grade, progressScore) {
   return equation;
 }
 
-let grade = 0;
+const grades = ["Kindergarten", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
+let currentGrade = 0;
 let score = 0;
 let progressScore = 0;
 
@@ -158,6 +161,21 @@ function updateProgressBar(){
 }
 
 /**
+ * Used for advancing the user to the next grade.
+ * Called when progressScore = 1.
+ */
+
+function advanceGrade(){
+  progressScore = 0;
+  currentGrade += 1;
+  document.getElementById("currentGrade").textContent = grades[currentGrade];
+}
+
+function addScore(){
+  score += 100 * currentGrade;
+}
+
+/**
  * Checks to see if the user's answer is correct.
  */
 function checkAnswer() {
@@ -172,15 +190,19 @@ function checkAnswer() {
         //Updating progress
         console.log(currentProblemTimer);
         progressScore = Math.min(progressScore + (1 / (3 * currentProblemTimer)), 1);
+        if (progressScore == 1){
+          advanceGrade();
+        }
 
         //Updating score
+        addScore();
 
         // Increase time by 5 seconds for correct answer
         timer = Math.min(timer + 5, 90); // Ensure timer doesn't exceed 30 seconds
         currentProblemTimer = 0;
 
         // Generate a new equation
-        const newEquation = generateEquation(grade, progressScore);
+        const newEquation = generateEquation(currentGrade, progressScore);
         solution = newEquation.solution;
         document.getElementById("problem").innerText = `${newEquation.equation}\n`;
     } else {
