@@ -40,6 +40,7 @@ function formatEquation(numbers, operators){
 function generateEquation(grade, progressScore) {
   let operators = ['+', '-'];
   let equation = '';
+  let maxNum;
   switch(grade){
     case 12:
     
@@ -63,12 +64,27 @@ function generateEquation(grade, progressScore) {
     
     case 2:
     
-    case 1:
+    case 1:{
       operators.push('*', '/');
+      let maxDivision;
+      let maxMultiply;
+      if (progressScore >= 0.5){
+        maxNum = 30;
+        maxDivision = 4;
+        maxMultiply = 9;
+      }
+      else{
+        maxNum = 20;
+        maxDivision = 3;
+        maxMultiply = 5;
+      }
+      const num1 =  Math.floor(Math.random() * maxNum) + 1;
+      const num2 =  Math.floor(Math.random() * maxNum) + 1;
+      equation = formatEquation([num1, num2], operators);
+    }
       break;
-    case 0:
-      let maxNum;
-      if (progressScore > 0.5){
+    case 0:{
+      if (progressScore >= 0.5){
         // Increases largest possible number to 20
         maxNum = 20;
       }
@@ -85,7 +101,7 @@ function generateEquation(grade, progressScore) {
       else{
         equation = formatEquation([num1, num2], operators);
       }
-
+    }
   }
 
   // Display current problem
