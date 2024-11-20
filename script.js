@@ -8,7 +8,7 @@ const operations = {
 
 /**
  * Used for formatting the equation that is displayed to the user.
- * Called by generateEquation() after difficulty specific properties are applied.
+ * Called by equationDifficulty() after difficulty specific properties are applied.
  * Returns equation as string and numerical solution to it.
  * @param {number[]} numbers: array containing all numbers included in current expression.
  * @param {string[]} operators: array containing all allowed operators for the current difficulty level.
@@ -23,6 +23,9 @@ function formatEquation(numbers, operators){
     const currentOperator = operators[Math.floor(Math.random() * operators.length)]
     equation += `${numbers[i]} ${currentOperator} `;
     // Calculate solution
+    if (currentOperator === "/" && currentGrade < 4){
+      numbers[i + 1] = (Math.floor(Math.random() * maxDivision) + 1);
+    }
     solution = operations[currentOperator](solution, numbers[i + 1]);
   }
 
@@ -37,11 +40,11 @@ function formatEquation(numbers, operators){
 * @param {int} grade: 0 = Kindergarden, 1 = 1st Grade, 2 = 2nd Grade, etc. up to 12.
 * @param {float} progressScore: How close the user is to advancing to the next grade level. Used to adjust difficulty within a grade level.
 */
-function generateEquation(grade, progressScore) {
+function equationDifficulty(progressScore) {
   let operators = ['+', '-'];
   let equation = '';
   let maxNum;
-  switch(grade){
+  switch(currentGrade){
     case 12:
     
     case 11:
@@ -124,7 +127,7 @@ let intervalId;
 let currentProblemTimer = 0;
 
 // Initial problem solution
-let initialEquation = generateEquation(0, 0);
+let initialEquation = equationDifficulty(0, 0);
 let solution = initialEquation.solution;
 document.getElementById("problem").innerText = `${initialEquation.equation}\n`;
 
@@ -218,7 +221,7 @@ function checkAnswer() {
         currentProblemTimer = 0;
 
         // Generate a new equation
-        const newEquation = generateEquation(currentGrade, progressScore);
+        const newEquation = equationDifficulty(progressScore);
         solution = newEquation.solution;
         document.getElementById("problem").innerText = `${newEquation.equation}\n`;
     } else {
