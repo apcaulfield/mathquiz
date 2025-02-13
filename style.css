@@ -26,23 +26,23 @@ body{
 /* Style for user answer input box */
 #userAnswer {
     width: 100%;
-    padding: 10px;         /* Add padding inside the input */
-    font-size: 18px;       /* Increase font size */
-    height: 40px;          /* Increase height */
-    border: 1px solid #ddd; /* Light border around the input */
-    border-radius: 5px;    /* Slightly round the corners */
+    padding: 10px;
+    font-size: 18px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     margin-bottom: 20px;
 }
 
 .progress-container {
-    width: 40vw; /* Sets it to max width */
+    width: 40vw;
     max-width: 350px;
     background-color: #ddd;
     border-radius: 5px;
     overflow: hidden;
     position: fixed;
     bottom: 20px;
-    height: 40px; /* Increased height to fit text and bar */
+    height: 40px;
     display: flex;
     flex-direction: column;
 }
@@ -50,11 +50,11 @@ body{
 .bar-text {
     font-size: 16px;
     line-height: 20px;
-    margin: 4px 0 4px 8px; /* Space around with left margin to align text */
+    margin: 4px 0 4px 8px;
 }
 
 .progress-bar {
-    height: 20px; /* Takes up half of progress container */
+    height: 20px;
     width: 0%;
     background-color: #13c359;
     transition: width 0.3s ease; /* Smooth transition for width change */
